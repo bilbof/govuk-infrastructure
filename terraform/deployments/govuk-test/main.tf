@@ -45,10 +45,6 @@ data "terraform_remote_state" "infra_security_groups" {
   }
 }
 
-resource "aws_route53_zone" "public" {
-  name         = local.public_lb_domain_name
-}
-
 module "govuk" {
   source                = "../../modules/govuk"
   mesh_name             = "${local.mesh_name}"
@@ -80,5 +76,5 @@ module "govuk" {
   signon_desired_count              = var.signon_desired_count
   static_desired_count              = var.static_desired_count
   draft_static_desired_count        = var.draft_static_desired_count
-  depends_on                        = [aws_route53_zone.public]
+  depends_on                        = [aws_route53_zone.public, aws_acm_certificate_validation.public]
 }
