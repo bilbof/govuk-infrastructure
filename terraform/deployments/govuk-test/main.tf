@@ -52,7 +52,7 @@ module "govuk" {
   ecs_cluster_name      = "${local.ecs_cluster_name}"
   mesh_domain           = "${local.mesh_domain}"
   public_lb_domain_name = local.public_lb_domain_name
-  internal_domain_name  = "${local.mesh_domain}"
+  internal_domain_name  = "${local.internal_domain_name}"
 
   vpc_id                            = data.terraform_remote_state.infra_networking.outputs.vpc_id
   private_subnets                   = data.terraform_remote_state.infra_networking.outputs.private_subnet_ids
