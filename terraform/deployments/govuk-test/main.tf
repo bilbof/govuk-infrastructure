@@ -21,6 +21,7 @@ provider "aws" {
 locals {
   ecs_cluster_name      = "${terraform.workspace == "default" ? var.ecs_cluster_name : "${var.ecs_cluster_name}-${terraform.workspace}"}"
   public_lb_subdomain   = "${terraform.workspace == "default" ? var.govuk_environment : "${terraform.workspace}.${var.govuk_environment}"}"
+  mesh_name             = "${terraform.workspace == "default" ? var.mesh_name : "${var.mesh_name}-${terraform.workspace}"}"
   mesh_domain           = "${terraform.workspace}.${var.mesh_subdomain}.${var.internal_domain}"
   public_lb_domain_name = "${local.public_lb_subdomain}.${var.public_domain}"
 }
@@ -45,7 +46,7 @@ data "terraform_remote_state" "infra_security_groups" {
 
 module "govuk" {
   source                = "../../modules/govuk"
-  mesh_name             = var.mesh_name
+  mesh_name             = "${local.mesh_name}"
   ecs_cluster_name      = "${local.ecs_cluster_name}"
   mesh_domain           = "${local.mesh_domain}"
   public_lb_domain_name = local.public_lb_domain_name
