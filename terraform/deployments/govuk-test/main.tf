@@ -19,13 +19,12 @@ provider "aws" {
 }
 
 locals {
-  govuk_environment     = "${terraform.workspace == "default" ? var.govuk_environment : "${var.govuk_environment}-${terraform.workspace}"}"     #test-plouf
-  internal_domain_name  = "${var.govuk_environment}.${var.internal_domain}"                                                                     #test-plouf.govuk-internal.digital
-  public_lb_domain_name = "${var.govuk_environment}.${var.public_domain}"                                                                       #test-plouf.govuki.digital
-  mesh_subdomain        = "${terraform.workspace == "default" ? var.mesh_subdomain : "${var.mesh_subdomain}-${terraform.workspace}"}"           #mesh-plouf
-  mesh_domain           = "${var.mesh_subdomain}.${var.internal_domain}"                                                                        #mesh-plouf.govuk-internal.digital
-  mesh_name             = "${terraform.workspace == "default" ? var.mesh_name : "${var.mesh_name}-${terraform.workspace}"}"                     #govuk-plouf
-  ecs_cluster_name      = "${terraform.workspace == "default" ? var.ecs_cluster_name : "${var.ecs_cluster_name}-${terraform.workspace}"}"       #govuk-plouf
+  internal_domain_name  = "${terraform.workspace == "default" ? var.internal_domain_name : "${terraform.workspace}.${var.internal_domain_name}"}"    #plouf.test.govuk-internal.digital
+  public_lb_subdomain   = "${terraform.workspace == "default" ? var.govuk_environment : "${terraform.workspace}.${var.govuk_environment}"}"          #plouf.test
+  public_lb_domain_name = "${local.public_lb_subdomain}.${var.public_domain}"                                                                        #plouf.test.govuk.digital
+  mesh_domain           = "${var.mesh_subdomain}.${local.internal_domain_name}"                                                                      #mesh.plouf.govuk-internal.digital
+  mesh_name             = "${terraform.workspace == "default" ? var.mesh_name : "${var.mesh_name}-${terraform.workspace}"}"                          #govuk-plouf
+  ecs_cluster_name      = "${terraform.workspace == "default" ? var.ecs_cluster_name : "${var.ecs_cluster_name}-${terraform.workspace}"}"            #govuk-plouf
 }
 
 data "terraform_remote_state" "infra_networking" {
@@ -80,6 +79,8 @@ module "govuk" {
   draft_static_desired_count        = var.draft_static_desired_count
   depends_on = [
     aws_route53_zone.workspace_public,
+    aws_route53_zone.internal_public,
+    aws_route53_zone.internal_private,
     aws_acm_certificate_validation.workspace_public,
     aws_route53_record.workspace_public,
     aws_acm_certificate.workspace_public,
