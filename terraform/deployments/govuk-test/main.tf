@@ -20,7 +20,7 @@ provider "aws" {
 
 locals {
   govuk_environment     = "${terraform.workspace == "default" ? var.govuk_environment : "${var.govuk_environment}-${terraform.workspace}"}"     #test-plouf
-  internal_domain_name  = "${var.govuk_environment}.${var.internal_domain_name}"                                                                #test-plouf.govuk-internal.digital
+  internal_domain_name  = "${var.govuk_environment}.${var.internal_domain}"                                                                     #test-plouf.govuk-internal.digital
   public_lb_domain_name = "${var.govuk_environment}.${var.public_domain}"                                                                       #test-plouf.govuki.digital
   mesh_subdomain        = "${terraform.workspace == "default" ? var.mesh_subdomain : "${var.mesh_subdomain}-${terraform.workspace}"}"           #mesh-plouf
   mesh_domain           = "${var.mesh_subdomain}.${var.internal_domain}"                                                                        #mesh-plouf.govuk-internal.digital
