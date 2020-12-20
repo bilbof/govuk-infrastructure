@@ -41,7 +41,7 @@ data "aws_route53_zone" "internal" {
 
 resource "aws_route53_record" "internal_service_record" {
   zone_id = data.aws_route53_zone.internal.zone_id
-  name    = terraform.workspace == "default" ? "${var.cluster_name}-redis.${var.internal_domain_name}" : "${var.cluster_name}-redis-${terraform.workspace}.${var.internal_domain_name}"
+  name    = terraform.workspace == "default" ? "${var.cluster_name}-redis.${var.internal_domain_name}" : "${var.cluster_name}-redis.${var.internal_domain_name}"
   type    = "CNAME"
   ttl     = 300
   records = [aws_elasticache_replication_group.redis_cluster.primary_endpoint_address]

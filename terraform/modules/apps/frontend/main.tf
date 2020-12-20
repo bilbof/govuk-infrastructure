@@ -34,7 +34,7 @@ module "app" {
 # TODO: use a single, ACM-managed cert with both domains on. There is already
 # such a cert in integration/staging/prod (but it needs defining in Terraform).
 data "aws_acm_certificate" "public_lb_default" {
-  domain   = "*.test.govuk.digital"
+  domain   = "*.${var.public_lb_domain_name}"
   statuses = ["ISSUED"]
 }
 

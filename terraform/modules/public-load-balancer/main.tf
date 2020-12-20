@@ -33,6 +33,8 @@ resource "aws_lb_target_group" "public" {
   health_check {
     path = "/healthcheck"
   }
+
+  depends_on = [aws_lb.public]
 }
 
 resource "aws_lb_listener" "public" {

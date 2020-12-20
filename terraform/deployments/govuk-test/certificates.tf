@@ -33,6 +33,19 @@ resource "aws_route53_zone" "workspace_public" {
   name = local.public_lb_domain_name # plouf.test.govuk.digital
 }
 
+resource "aws_route53_zone" "internal_public" {
+  name = local.internal_domain_name # plouf.test.govuk-internal.digital
+}
+
+resource "aws_route53_zone" "internal_private" {
+  name = local.internal_domain_name # plouf.test.govuk-internal.digital
+
+  vpc {
+    vpc_id = data.terraform_remote_state.infra_networking.outputs.vpc_id
+  }
+
+}
+
 resource "aws_route53_record" "workspace_public" {
   for_each = {
     for dvo in aws_acm_certificate.workspace_public.domain_validation_options : dvo.domain_name => {
