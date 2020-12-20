@@ -8,7 +8,7 @@ terraform {
 }
 
 locals {
-  workspace_suffix      = "${terraform.workspace == "default" ? "govuk" : "${terraform.workspace}"}"
+  workspace_suffix = "${terraform.workspace == "default" ? "govuk" : "${terraform.workspace}"}"
 }
 
 module "app" {
