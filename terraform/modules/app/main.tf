@@ -60,6 +60,7 @@ module "bootstrap_task_definition" {
   service_name       = var.service_name
   execution_role_arn = var.execution_role_arn
   source             = "../task-definitions/bootstrap"
+  ports              = [for x in local.container_services : x.port]
 }
 
 resource "aws_security_group" "service" {

@@ -5,21 +5,28 @@ variable "image" {
   type = string
 }
 variable "environment_variables" {
-  type = map
+  type    = map
+  default = {}
 }
 variable "log_group" {
   type = string
 }
 variable "secrets_from_arns" {
-  type = map
+  type    = map
+  default = {}
 }
 variable "aws_region" {
   type = string
 }
-variable "depends_on" {
+variable "depends_on_containers" {
   type        = map
   default     = {}
   description = "Other containers which this depends on (e.g. for envoy, set this to {envoy: \"START\"})"
+}
+
+variable "ports" {
+  type    = list
+  default = [80]
 }
 
 output "value" {
@@ -28,7 +35,7 @@ output "value" {
     "image" : var.image,
     "essential" : true,
     "environment" : [for key, value in var.environment_variables : { name : key, value : value }],
-    "dependsOn" : [for key, value in var.depends_on : { containerName : key, condition : value }],
+    "dependsOn" : [for key, value in var.depends_on_containers : { containerName : key, condition : value }],
     "logConfiguration" : {
       "logDriver" : "awslogs",
       "options" : {
@@ -40,13 +47,12 @@ output "value" {
     },
     "mountPoints" : [],
     "portMappings" : [
-      {
-        "containerPort" : 80,
-        "hostPort" : 80,
-        "protocol" : "tcp"
+      for port in var.ports :
+      { "ContainerPort" = "${port}",
+        "hostPort"      = "${port}",
+        "Protocol"      = "tcp",
       }
     ],
     "secrets" : [for key, value in var.secrets_from_arns : { name : key, valueFrom : value }]
   }
 }
-
