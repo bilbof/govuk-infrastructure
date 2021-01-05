@@ -61,7 +61,7 @@ resource "aws_ecs_service" "service" {
   task_definition = module.task_definition.arn
 
   network_configuration {
-    security_groups = [var.service_security_group_id, var.govuk_management_access_sg_id]
+    security_groups = [var.statsd_security_group_id, var.govuk_management_access_sg_id]
     subnets         = var.private_subnets
   }
 

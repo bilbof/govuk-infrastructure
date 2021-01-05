@@ -18,6 +18,7 @@ module "app" {
   desired_count                    = var.desired_count
   service_discovery_namespace_id   = var.service_discovery_namespace_id
   service_discovery_namespace_name = var.service_discovery_namespace_name
+  statsd_security_group_id         = var.statsd_security_group_id
   extra_security_groups            = [var.govuk_management_access_security_group]
 
   load_balancers = [{

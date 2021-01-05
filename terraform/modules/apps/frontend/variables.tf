@@ -57,3 +57,8 @@ variable "public_lb_domain_name" {
   description = "Domain in which to create DNS records for the app's Internet-facing load balancer. For example, staging.govuk.digital"
   type        = string
 }
+
+variable "statsd_security_group_id" {
+  description = "Security Group for statsd"
+  type        = string
+}

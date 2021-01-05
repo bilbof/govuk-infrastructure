@@ -33,7 +33,7 @@ variable "service_discovery_namespace_name" {
   type = string
 }
 
-variable "service_security_group_id" {
+variable "statsd_security_group_id" {
   type        = string
   description = "Security group for Statsd ECS Service"
 }

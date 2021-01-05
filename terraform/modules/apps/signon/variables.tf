@@ -57,3 +57,8 @@ variable "desired_count" {
   type        = number
   default     = 1
 }
+
+variable "statsd_security_group_id" {
+  description = "Security Group for statsd"
+  type        = string
+}

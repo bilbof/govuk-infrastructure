@@ -67,3 +67,13 @@ resource "aws_security_group" "service" {
   vpc_id      = var.vpc_id
   description = "${var.service_name} app ECS tasks"
 }
+
+resource "aws_security_group_rule" "statsd_from_apps_tcp" {
+  description              = "Allow ${var.service_name} to send metrics to statsd via TCP"
+  type                     = "egress"
+  from_port                = "8125"
+  to_port                  = "8125"
+  protocol                 = "tcp"
+  security_group_id        = var.statsd_security_group_id
+  source_security_group_id = aws_security_group.service.id
+}
