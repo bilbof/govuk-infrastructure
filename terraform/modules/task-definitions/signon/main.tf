@@ -15,6 +15,10 @@ provider "aws" {
   }
 }
 
+locals {
+  app_name = "signon"
+}
+
 data "aws_secretsmanager_secret" "sentry_dsn" {
   name = "signon_app-SENTRY_DSN"
 }
@@ -60,6 +64,9 @@ module "task_definition" {
         { "name" : "GOVUK_APP_NAME", "value" : local.service_name },
         { "name" : "GOVUK_APP_ROOT", "value" : "/app" },
         { "name" : "GOVUK_APP_TYPE", "value" : "rack" },
+        { "name" : "GOVUK_STATSD_HOST", "value" : var.statsd_host },
+        { "name" : "GOVUK_STATSD_PREFIX", "value" : "govuk.app.${local.app_name}.ecs" },
+        { "name" : "GOVUK_STATSD_PROTOCOL", "value" : "tcp" },
         { "name" : "GOVUK_WEBSITE_ROOT", "value" : var.govuk_website_root },
         { "name" : "PORT", "value" : "80" },
         { "name" : "RAILS_ENV", "value" : "production" },

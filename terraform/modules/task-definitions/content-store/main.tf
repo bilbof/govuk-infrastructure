@@ -15,6 +15,10 @@ provider "aws" {
   }
 }
 
+locals {
+  app_name = "content-store"
+}
+
 data "aws_secretsmanager_secret" "oauth_id" {
   name = "${var.service_name}_OAUTH_ID"
 }
@@ -56,7 +60,9 @@ module "task_definition" {
         { "name" : "GOVUK_APP_TYPE", "value" : "rack" },
         { "name" : "GOVUK_CONTENT_SCHEMAS_PATH", "value" : "/govuk-content-schemas" },
         { "name" : "GOVUK_GROUP", "value" : "deploy" }, # TODO: clean up?
-        { "name" : "GOVUK_STATSD_PREFIX", "value" : "fargate" },
+        { "name" : "GOVUK_STATSD_HOST", "value" : var.statsd_host },
+        { "name" : "GOVUK_STATSD_PREFIX", "value" : "govuk.app.${local.app_name}.ecs" },
+        { "name" : "GOVUK_STATSD_PROTOCOL", "value" : "tcp" },
         { "name" : "GOVUK_USER", "value" : "deploy" }, # TODO: clean up?
         { "name" : "GOVUK_WEBSITE_ROOT", "value" : var.govuk_website_root },
         { "name" : "MONGODB_URI", "value" : var.mongodb_url },
@@ -69,8 +75,6 @@ module "task_definition" {
         { "name" : "PORT", "value" : "80" },
         { "name" : "RAILS_ENV", "value" : "production" },
         { "name" : "SENTRY_ENVIRONMENT", "value" : var.sentry_environment },
-        { "name" : "STATSD_PROTOCOL", "value" : "tcp" },
-        { "name" : "STATSD_HOST", "value" : var.statsd_host },
         { "name" : "UNICORN_WORKER_PROCESSES", "value" : "12" }
       ],
       "dependsOn" : [{
